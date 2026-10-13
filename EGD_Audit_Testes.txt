@@ -1,0 +1,12 @@
+test_circuit_bound (test_egd_audit.EGDAuditTests.test_circuit_bound) ... ok
+test_error_budget (test_egd_audit.EGDAuditTests.test_error_budget) ... ok
+test_exact_halving_finds_empty_prefix (test_egd_audit.EGDAuditTests.test_exact_halving_finds_empty_prefix) ... ok
+test_granularity_barrier (test_egd_audit.EGDAuditTests.test_granularity_barrier) ... ok
+test_greedy_step (test_egd_audit.EGDAuditTests.test_greedy_step) ... ok
+test_partition_and_potential (test_egd_audit.EGDAuditTests.test_partition_and_potential) ... ok
+test_reproducible_finite_suite (test_egd_audit.EGDAuditTests.test_reproducible_finite_suite) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.016s
+
+OK

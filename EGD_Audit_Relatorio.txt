@@ -1,0 +1,87 @@
+LUNZ RESEARCH GROUP — EGD / EGD-QEC AUDIT REPORT
+==================================================================
+Auditor version: 0.1.0
+Generated (UTC): 2026-10-13T00:31:42.094998+00:00
+Python: 3.13.5
+
+1. PARAMETERS AND FINITE MODEL
+   input_bits_n: 8
+   exponent_b: 1
+   truth_table_length_N: 256
+   circuit_size_s=n^b: 8
+   description_count_upper_bound_B: 487926160226846695593934848
+   L=ceil(log2(B)): 89
+   chosen_r: 90
+   r_le_N: True
+
+2. MACHINE-CHECKED FINITE TESTS
+   seed: 7321
+   randomized_trials: 500
+   potential_identity_instances: 254
+   exact_halving_instances: 100
+   approximate_greedy_lemma_instances: 500
+   error_budget_sufficient_instances: 500
+   all_finite_tests_passed: True
+   interpretation: Finite implementation checks only; they do not prove asymptotic complexity or class membership.
+
+3. MATHEMATICAL CHECKS
+   [PASS] PARAM-01-DESCRIPTION-BOUND: Computed an explicit description-count upper bound, and the required prefix fits in the truth table for this instance.
+      Evidence: {'input_bits_n': 8, 'size_bound_s=n^b': 8, 'description_count_upper_bound_B': '487926160226846695593934848', 'ceil_log2_B': 89, 'chosen_r=L+1': 90, 'truth_table_length_N=2^n': 256, 'r_le_N_for_this_instance': True}
+   [PASS] TEST-01-FINITE-CHECKS: Finite/reference tests of the core combinatorial identities.
+      Evidence: {'seed': 7321, 'randomized_trials': 500, 'potential_identity_instances': 254, 'exact_halving_instances': 100, 'approximate_greedy_lemma_instances': 500, 'error_budget_sufficient_instances': 500, 'all_finite_tests_passed': True, 'interpretation': 'Finite implementation checks only; they do not prove asymptotic complexity or class membership.'}
+   [OBSERVED] RUNTIME-OBSERVATION: Wall-clock runtime of this finite audit run (not an asymptotic guarantee).
+      Evidence: {'seconds': 0.024331}
+
+4. FORMAL PROOF-OBLIGATION LEDGER
+   [PROVED_FROM_DEFINITIONS] MATH-01-PARTITION (NON-BLOCKING)
+      A(u)=A(u0)+A(u1), and Phi(u)=(Phi(u0)+Phi(u1))/2.
+      Evidence / gap: Disjoint partition by the next truth-table bit; also checked in finite tests.
+   [PROVED_FROM_DEFINITIONS] MATH-02-EXACT-HALVING (NON-BLOCKING)
+      If 2^r exceeds the number M of circuit descriptions and r is within the truth-table length, exact halving yields a prefix with zero survivors.
+      Evidence / gap: At each step A(next)<=A(current)/2, hence A(u_r)<=M/2^r<1; A(u_r) is a nonnegative integer.
+   [PROVED_FROM_DEFINITIONS] MATH-03-APPROXIMATE-STEP (NON-BLOCKING)
+      Choosing the child with lower estimated potential, with both absolute errors <= epsilon_i, gives Phi(child)<=Phi(parent)+epsilon_i.
+      Evidence / gap: Two-case proof from the exact mean identity and the ordering of estimates; rational finite tests included.
+   [PROVED_FROM_DEFINITIONS] MATH-05-GRANULARITY-BARRIER (NON-BLOCKING)
+      Under a strict additive error budget, at least one depth has precision fine enough to recover exact survivor counts for all prefixes at that depth.
+      Evidence / gap: The depth thresholds sum to 1-2^-r, while the budget is strictly below 1-M/2^r <= 1-2^-r for M>=1.
+   [PROVED_FROM_DEFINITIONS] MATH-04-ERROR-BUDGET (NON-BLOCKING)
+      Phi(empty)+sum(epsilon_i)<1 implies the final survivor count is zero, when the stepwise error bound is valid.
+      Evidence / gap: Iterate the approximate-step inequality and use integrality at depth r.
+   [NOT_IMPLEMENTED] ALG-01-EGD-QEC-ESTIMATOR (BLOCKS VALIDATION)
+      No concrete syndrome/relaxation algorithm mapping a prefix to an estimate is supplied in this project bundle.
+      Evidence / gap: A named architecture is not executable evidence. Need algorithm, error theorem, and worst-case bit-complexity analysis.
+   [OPEN] ALG-02-WORST-CASE-EFFICIENCY (BLOCKS VALIDATION)
+      No proof shows that every estimate is computed within the required worst-case resources.
+      Evidence / gap: The explicit reference halving implementation scans a finite candidate family and is exponential in the description length in the worst case.
+   [OPEN] ALG-03-ERROR-COMPOSITION (BLOCKS VALIDATION)
+      QEC/channel error assumptions, estimator bias, numerical error, and adaptive composition are not fully specified or proved.
+      Evidence / gap: Hoeffding/repetition bounds only address specified random channel errors; they do not by themselves certify the potential estimate.
+   [NOT_IMPLEMENTED] ST-01-ABSOLUTE-PROTOCOL (BLOCKS VALIDATION)
+      No complete Student-Teacher protocol using the EGD state transition is implemented with a constant consultation budget.
+      Evidence / gap: The exact halving simulator does not itself provide the required constant-query interface.
+   [OPEN] ST-02-AC0-QPOLY-MEMBERSHIP (BLOCKS VALIDATION)
+      Membership of one absolute EGD protocol family in the required polylog-uniform AC^0[qpoly] class is not established.
+      Evidence / gap: Python tests or benchmark timing cannot prove nonuniform circuit-class membership or the requested uniformity theorem.
+   [OPEN] ST-03-INFINITELY-MANY-EXONENTS (BLOCKS VALIDATION)
+      A single protocol with the required guarantees for infinitely many exponents b has not been proved.
+      Evidence / gap: A separate construction for each fixed b does not automatically establish the absolute protocol condition.
+   [CONDITIONAL_ONLY] CONCLUSION-01-P-NE-NP (BLOCKS VALIDATION)
+      P != NP is not derived by this auditor.
+      Evidence / gap: The conclusion follows only if all hypotheses of the cited Carmosino-Grosser implication are separately established.
+
+5. FORMAL CONCLUSION
+   Verdict: NOT VALIDATED
+   The exact-halving mathematical argument is valid under its stated assumptions.
+   The additive-error granularity lemma also flags a precision/counting barrier for uniformly accurate estimators.
+   The efficient EGD-QEC estimator, error composition, absolute Student-Teacher protocol,
+   AC^0[qpoly] membership, polylog-uniformity and infinite-exponent condition are NOT established.
+   Therefore this audit does not certify that EGD meets the Carmosino-Grosser hypotheses.
+   This is not a proof that EGD cannot work; it is a finding that the evidence is incomplete.
+
+6. EXIT STATUS (CUSTOM PROJECT CONVENTION)
+   Exit code: 0
+   Convention: 1 = all end-to-end claims validated; 0 = not validated.
+
+DISCLAIMER
+   This auditor verifies reference calculations and tracks mathematical proof obligations. It cannot infer a worst-case asymptotic bound, AC^0[qpoly] membership, polylog-uniformity, or P != NP from finite tests. With the EGD-QEC implementation and absolute protocol missing, NOT VALIDATED means the claims are not established, not that EGD is impossible.
